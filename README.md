@@ -1,4 +1,4 @@
-# GitHub Kanban Board.
+# GitHub Kanban Board
 
 Created as a [Test task](https://github.com/incodellc/github-kanban-test-task) with the use of a personal react project template bootstrapped with [Create React App](https://github.com/facebook/create-react-app) with autodeploy to GH-pages.
 
