@@ -7,6 +7,7 @@ const SearchForm = () => {
                 <input placeholder='Enter repo URL' />
             </Form.Field>
             <Button type='submit'>Load issues</Button>
+            {/* https://prnt.sc/jcSVOVnnqV1J */}
         </Form>
     )
 }
