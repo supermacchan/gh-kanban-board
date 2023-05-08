@@ -1,7 +1,10 @@
-function App() {
+import MainPage from "pages/MainPage";
+
+const App = () => {
   return (
-    <div className="App">
-    </div>
+    <>
+      <MainPage />
+    </>
   );
 }
 
