@@ -2,7 +2,7 @@ import { Octokit } from "octokit";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const octokit = new Octokit({
-    auth: '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'
+    auth: process.env.GIT_TOKEN
 });
 
 const fetchAllIssues = createAsyncThunk(
