@@ -1,21 +1,10 @@
 import { Card } from 'semantic-ui-react';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { APIoperations } from 'redux/operations';
+import { useSelector } from 'react-redux';
+import { selectOpenIssues } from 'redux/selectors';
 import { formatDate } from 'utils/formatDate';
 
 const ToDoSection = () => {
-    const dispatch = useDispatch();
-    const issues = useSelector(state => state.issues.issues);
-
-    useEffect(() => {
-        const fetch = async (owner, repo) => {
-            await dispatch(APIoperations.fetchAllIssues({owner, repo}));
-        }
-
-        fetch('pineappleEA', 'pineapple-src');
-        
-    }, [dispatch]);
+    const issues = useSelector(selectOpenIssues);
     
     return (
         <section>

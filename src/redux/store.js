@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { issuesReducer } from "./slices/repoSlice";
+import { userReducer } from "./slices/userSlice";
 import localStorage from 'redux-persist/lib/storage';
 import {
     persistStore,
@@ -20,7 +21,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-    // user: userReducer,
+    user: userReducer,
     issues: issuesReducer
 });
 

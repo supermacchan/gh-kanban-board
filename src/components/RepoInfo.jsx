@@ -1,13 +1,17 @@
 import { Breadcrumb, Icon, Label } from 'semantic-ui-react';
-
-const URL_BASE = "https://github.com/"
-
-const sections = [
-    { key: 'username', content: 'username', href: `${URL_BASE}username` },
-    { key: 'repo-name', content: 'repo name', href: `${URL_BASE}username/repo` }
-  ]
+import { useSelector } from 'react-redux';
+import { selectCurrentOwner, selectCurrentRepo } from 'redux/selectors';
   
 const RepoInfo = () => {
+    const owner = useSelector(selectCurrentOwner);
+    const repo = useSelector(selectCurrentRepo);
+
+    const URL_BASE = "https://github.com/";
+    const sections = [
+        { key: 'username', content: `${owner}`, href: `${URL_BASE}${owner}` },
+        { key: 'repo-name', content: `${repo}`, href: `${URL_BASE}${owner}/${repo}` }
+    ];
+
     return (
         <>
             <Breadcrumb icon='right angle' sections={sections} />

@@ -12,6 +12,8 @@ const fetchAllIssues = createAsyncThunk(
         const { data }  = await octokit.request('GET /repos/{owner}/{repo}/issues', {
             owner: owner,
             repo: repo,
+            state: 'all',
+            per_page: 100,
             headers: {
               'X-GitHub-Api-Version': '2022-11-28'
             }
