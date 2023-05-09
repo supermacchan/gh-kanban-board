@@ -1,12 +1,26 @@
 import { Container, Breadcrumb, Icon, Label } from 'semantic-ui-react';
-import { useSelector } from 'react-redux';
-import { selectCurrentOwner, selectCurrentRepo, selectCurrentStarCount } from 'redux/selectors';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { APIoperations } from 'redux/operations';
+import { selectCurrentOwner, selectCurrentRepo, selectCurrentStarCount, selectError } from 'redux/selectors';
 import { formatNumber } from 'utils/formatNumber';
   
 const RepoInfo = () => {
     const owner = useSelector(selectCurrentOwner);
     const repo = useSelector(selectCurrentRepo);
     const stargazers = useSelector(selectCurrentStarCount);
+    const error = useSelector(selectError);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (error) {
+            return;
+        }
+
+        if (owner && repo) {
+            dispatch(APIoperations.fetchStars({owner, repo}));
+        }
+    }, [dispatch, owner, repo, error])
 
     const URL_BASE = "https://github.com/";
     const sections = [

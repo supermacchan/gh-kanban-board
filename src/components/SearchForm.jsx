@@ -23,10 +23,12 @@ const SearchForm = () => {
         dispatch(onFormSubmit(data));
         await dispatch(APIoperations.fetchAllIssues(data));
 
-        if (!error) {
-            dispatch(APIoperations.fetchStars(data));
-            reset(); 
+        if (error) {
+            return;
         }  
+
+        dispatch(APIoperations.fetchStars(data));
+        reset(); 
     }
 
     const reset = () => {
