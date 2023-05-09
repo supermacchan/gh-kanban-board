@@ -4,3 +4,4 @@ export const selectClosedIssues = state => state.issues.issues.closed;
 
 export const selectCurrentOwner = state => state.user.current.owner;
 export const selectCurrentRepo = state => state.user.current.repo;
+export const selectCurrentStarCount = state => state.user.current.stars;

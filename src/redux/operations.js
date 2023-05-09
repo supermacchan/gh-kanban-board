@@ -1,4 +1,5 @@
 import { Octokit } from "octokit";
+
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const octokit = new Octokit({
@@ -6,7 +7,7 @@ const octokit = new Octokit({
 });
 
 const fetchAllIssues = createAsyncThunk(
-    'issues/fetchAll',
+    'repo/fetchAllIssues',
     async ({ owner, repo }, thunkAPI) => {
       try {
         const { data }  = await octokit.request('GET /repos/{owner}/{repo}/issues', {
@@ -27,6 +28,27 @@ const fetchAllIssues = createAsyncThunk(
     }
 );
 
+const fetchStars = createAsyncThunk(
+  'repo/fetchStars',
+  async ({ owner, repo }, thunkAPI) => {
+    try {
+      const { data }  = await octokit.request('GET /repos/{owner}/{repo}', {
+        owner: owner,
+        repo: repo,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28'
+        }
+      })
+
+      console.log(data.stargazers_count);
+      return data.stargazers_count;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+)
+
 export const APIoperations = {
     fetchAllIssues,
+    fetchStars
 }

@@ -5,7 +5,8 @@ const initialState = {
     queries: [],
     current: {
         owner: null,
-        repo: null
+        repo: null,
+        stars: null
     },
     error: null,
 };
@@ -36,6 +37,14 @@ export const userSlice = createSlice({
         [APIoperations.fetchAllIssues.rejected](state, action) {
             state.error = action.payload;
         },
+
+        [APIoperations.fetchStars.fulfilled](state, action) {
+            state.current.stars = action.payload;
+            state.error = null;
+        },
+        [APIoperations.fetchStars.rejected](state, action) {
+            state.error = action.payload;
+        }
     },
 });
 

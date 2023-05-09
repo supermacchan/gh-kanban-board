@@ -1,10 +1,12 @@
 import { Container, Breadcrumb, Icon, Label } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
-import { selectCurrentOwner, selectCurrentRepo } from 'redux/selectors';
+import { selectCurrentOwner, selectCurrentRepo, selectCurrentStarCount } from 'redux/selectors';
+import { formatNumber } from 'utils/formatNumber';
   
 const RepoInfo = () => {
     const owner = useSelector(selectCurrentOwner);
     const repo = useSelector(selectCurrentRepo);
+    const stargazers = useSelector(selectCurrentStarCount);
 
     const URL_BASE = "https://github.com/";
     const sections = [
@@ -17,7 +19,7 @@ const RepoInfo = () => {
             <Breadcrumb icon='right angle' sections={sections} size='large' />
             <Label color='black' style={{marginLeft: '15px'}}>
                 <Icon name="star" color="yellow" />
-                100 stars
+                {formatNumber(stargazers)} stars
             </Label>
         </Container>
     )

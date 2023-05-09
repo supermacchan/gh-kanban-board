@@ -14,6 +14,7 @@ const SearchForm = () => {
         const data = extractDataFromQuery(query);
         dispatch(onFormSubmit(data));
         dispatch(APIoperations.fetchAllIssues(data));
+        dispatch(APIoperations.fetchStars(data));
         reset();
     }
 
