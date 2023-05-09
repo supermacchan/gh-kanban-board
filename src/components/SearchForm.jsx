@@ -1,21 +1,32 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectError } from "redux/selectors";
 import { Container, Form } from 'semantic-ui-react';
 import { onFormSubmit } from "redux/slices/userSlice";
 import { APIoperations } from 'redux/operations';
 import { extractDataFromQuery } from "utils/extractDataFromQuery";
 
 const SearchForm = () => {
-    const [query, setQuery] = useState('')
+    const [query, setQuery] = useState('');
+    const error = useSelector(selectError);
     const dispatch = useDispatch();
 
-    const handleFormSubmit = e => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
         const data = extractDataFromQuery(query);
+
+        // in case the query is incorrect
+        if (!data) {
+            return;
+        }
+
         dispatch(onFormSubmit(data));
-        dispatch(APIoperations.fetchAllIssues(data));
-        dispatch(APIoperations.fetchStars(data));
-        reset();
+        await dispatch(APIoperations.fetchAllIssues(data));
+
+        if (!error) {
+            dispatch(APIoperations.fetchStars(data));
+            reset(); 
+        }  
     }
 
     const reset = () => {

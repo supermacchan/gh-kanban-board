@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { selectCurrentOwner, selectCurrentRepo } from 'redux/selectors';
+import { selectCurrentOwner, selectCurrentRepo, selectError } from 'redux/selectors';
 import { APIoperations } from 'redux/operations';
 import { Container, Grid, Header } from 'semantic-ui-react';
 import ToDo from './GridSections/ToDo';
@@ -11,12 +11,17 @@ const KanbanGrid = () => {
     const dispatch = useDispatch();
     const owner = useSelector(selectCurrentOwner);
     const repo = useSelector(selectCurrentRepo);
+    const error = useSelector(selectError);
 
     useEffect(() => {
+        if (error) {
+            return;
+        }
+
         if (owner && repo) {
             dispatch(APIoperations.fetchAllIssues({owner, repo}));
         }
-    }, [dispatch, owner, repo])
+    }, [dispatch, owner, repo, error])
 
     return (
         <Container style={{padding: '15px 0'}}> 

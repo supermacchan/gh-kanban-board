@@ -35,6 +35,11 @@ export const userSlice = createSlice({
             state.error = null;
         },
         [APIoperations.fetchAllIssues.rejected](state, action) {
+            state.current = {
+                owner: null,
+                repo: null,
+                stars: null
+            };
             state.error = action.payload;
         },
 

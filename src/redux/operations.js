@@ -1,5 +1,5 @@
 import { Octokit } from "octokit";
-
+import { toast } from "react-toastify";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const octokit = new Octokit({
@@ -23,6 +23,7 @@ const fetchAllIssues = createAsyncThunk(
         console.log(data);
         return data;
       } catch (err) {
+        toast.error(err.message);
         return thunkAPI.rejectWithValue(err.message);
       }
     }
@@ -43,6 +44,7 @@ const fetchStars = createAsyncThunk(
       console.log(data.stargazers_count);
       return data.stargazers_count;
     } catch (err) {
+      toast.error(err.message);
       return thunkAPI.rejectWithValue(err.message);
     }
   }
