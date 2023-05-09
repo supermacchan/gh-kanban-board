@@ -1,4 +1,4 @@
-import { Breadcrumb, Icon, Label } from 'semantic-ui-react';
+import { Container, Breadcrumb, Icon, Label } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import { selectCurrentOwner, selectCurrentRepo } from 'redux/selectors';
   
@@ -13,13 +13,13 @@ const RepoInfo = () => {
     ];
 
     return (
-        <>
-            <Breadcrumb icon='right angle' sections={sections} />
-            <Label>
+        <Container style={{paddingBottom: '15px'}}>
+            <Breadcrumb icon='right angle' sections={sections} size='large' />
+            <Label color='black' style={{marginLeft: '15px'}}>
                 <Icon name="star" color="yellow" />
                 100 stars
             </Label>
-        </>
+        </Container>
     )
 }
   

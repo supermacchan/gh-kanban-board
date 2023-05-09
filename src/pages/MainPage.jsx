@@ -1,13 +1,13 @@
 import SearchForm from "components/SearchForm";
 import RepoInfo from "components/RepoInfo";
-import SectionsGrid from "components/SectionsGrid";
+import KanbanGrid from "components/KanbanGrid";
 
 const MainPage = () => {
     return(
         <main>
             <SearchForm />
             <RepoInfo />
-            <SectionsGrid />
+            <KanbanGrid />
         </main>
     )
 }
