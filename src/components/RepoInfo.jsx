@@ -16,11 +16,16 @@ const RepoInfo = () => {
 
     return (
         <Container style={{paddingBottom: '15px'}}>
-            <Breadcrumb icon='right angle' sections={sections} size='large' />
-            <Label color='black' style={{marginLeft: '15px'}}>
-                <Icon name="star" color="yellow" />
-                {formatNumber(stargazers)} stars
-            </Label>
+            { owner && 
+                <Breadcrumb icon='right angle' sections={sections} size='large' />
+            }
+            
+            { stargazers && 
+                <Label color='black' style={{marginLeft: '15px'}}>
+                    <Icon name="star" color="yellow" />
+                    {formatNumber(stargazers)} stars
+                </Label>
+            }
         </Container>
     )
 }

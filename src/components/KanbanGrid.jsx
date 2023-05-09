@@ -13,7 +13,9 @@ const KanbanGrid = () => {
     const repo = useSelector(selectCurrentRepo);
 
     useEffect(() => {
-        dispatch(APIoperations.fetchAllIssues({owner, repo}));
+        if (owner && repo) {
+            dispatch(APIoperations.fetchAllIssues({owner, repo}));
+        }
     }, [dispatch, owner, repo])
 
     return (

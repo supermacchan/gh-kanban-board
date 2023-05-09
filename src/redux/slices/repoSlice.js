@@ -16,9 +16,9 @@ export const repoSlice = createSlice({
     initialState,
     extraReducers: {
         [APIoperations.fetchAllIssues.fulfilled](state, action) {
-            state.issues.closed = action.payload.filter(issue => issue.state === "closed");
-            state.issues.assigned = action.payload.filter(issue => issue.assignee);
             state.issues.open = action.payload.filter(issue => issue.state === "open");
+            state.issues.assigned = action.payload.filter(issue => issue.assignee);
+            state.issues.closed = action.payload.filter(issue => issue.state === "closed");
             state.error = null;
             state.loading = false;
         },
