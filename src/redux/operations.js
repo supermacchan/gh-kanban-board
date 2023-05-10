@@ -21,6 +21,14 @@ const fetchAllIssues = createAsyncThunk(
           })
 
         console.log(data);
+        // const result = {
+        //   id: data.id,
+        //   title: data.title,
+        //   number: data.number,
+        //   created_at: data.created_at,
+        //   user: data.user,
+        //   comments: data.comments,
+        // }
         return data;
       } catch (err) {
         toast.error(err.message);

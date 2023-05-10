@@ -21,9 +21,21 @@ export const repoSlice = createSlice({
     },
     extraReducers: {
         [APIoperations.fetchAllIssues.fulfilled](state, action) {
-            state.issues.open = action.payload.filter(issue => issue.state === "open");
-            state.issues.assigned = action.payload.filter(issue => issue.assignee);
-            state.issues.closed = action.payload.filter(issue => issue.state === "closed");
+            const filteredResult = action.payload.map(issue => {
+                return {
+                    id: issue.id,
+                    title: issue.title,
+                    number: issue.number,
+                    created_at: issue.created_at,
+                    user: issue.user.login,
+                    comments: issue.comments,
+                    assignee: issue.assignee,
+                    state: issue.state
+                }
+            });
+            state.issues.open = filteredResult.filter(issue => issue.state === "open");
+            state.issues.assigned = filteredResult.filter(issue => issue.assignee);
+            state.issues.closed = filteredResult.filter(issue => issue.state === "closed");
             state.error = null;
             state.loading = false;
         },

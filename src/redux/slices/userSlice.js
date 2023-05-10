@@ -23,13 +23,25 @@ export const userSlice = createSlice({
     },
     extraReducers: {
         [APIoperations.fetchAllIssues.fulfilled](state, action) {
+            const filteredResult = action.payload.map(issue => {
+                return {
+                    id: issue.id,
+                    title: issue.title,
+                    number: issue.number,
+                    created_at: issue.created_at,
+                    user: issue.user.login,
+                    comments: issue.comments,
+                    assignee: issue.assignee,
+                    state: issue.state
+                }
+            });
             state.queries.push({
                 owner: action.meta.arg.owner,
                 repo: action.meta.arg.repo,
                 issues: {
-                    open: action.payload.filter(issue => issue.state === "open"),
-                    assigned: action.payload.filter(issue => issue.assignee),
-                    closed: action.payload.filter(issue => issue.state === "closed")
+                    open: filteredResult.filter(issue => issue.state === "open"),
+                    assigned: filteredResult.filter(issue => issue.assignee),
+                    closed: filteredResult.filter(issue => issue.state === "closed")
                 }
             })
             state.error = null;
