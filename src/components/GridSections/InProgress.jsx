@@ -12,7 +12,6 @@ const InProgress = ({
     dropCardHandler
  }) => {
     const issues = useSelector(selectAssignedIssues);
-    console.log(issues);
     const isLoading = useSelector(selectLoading);
 
     return (
@@ -27,7 +26,7 @@ const InProgress = ({
             }}
         >
             {isLoading && <Loader />}
-            {board.issues.length > 0 && board.issues.map(item => {
+            {issues.length > 0 && issues.map(item => {
                 return (
                     <IssueCard 
                         key={item.id} 

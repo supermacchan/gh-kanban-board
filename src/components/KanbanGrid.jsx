@@ -9,6 +9,7 @@ import {
     selectClosedIssues,
 } from 'redux/selectors';
 import { APIoperations } from 'redux/operations';
+import { updateBoards } from 'redux/slices/repoSlice';
 import { Container, Grid, Header } from 'semantic-ui-react';
 import ToDo from './GridSections/ToDo';
 import InProgress from './GridSections/InProgress';
@@ -16,30 +17,28 @@ import Done from './GridSections/Done';
 
 const KanbanGrid = () => {
     const dispatch = useDispatch();
+
     const owner = useSelector(selectCurrentOwner);
     const repo = useSelector(selectCurrentRepo);
     const error = useSelector(selectError);
-    const open = useSelector(selectOpenIssues);
-    const assigned = useSelector(selectAssignedIssues);
-    const closed= useSelector(selectClosedIssues);
 
+    const [currentBoard, setCurrentBoard] = useState(null);
+    const [currentItem, setCurrentItem] = useState(null);  
     const [boards, setBoards] = useState([
         {
             title: "open",
-            issues: open
+            issues: useSelector(selectOpenIssues)
         },
         {
             title: "assigned",
-            issues: assigned
+            issues: useSelector(selectAssignedIssues)
         },
         {
             title: "closed",
-            issues: closed
+            issues: useSelector(selectClosedIssues)
         }
     ]); 
-    const [currentBoard, setCurrentBoard] = useState(null);
-    const [currentItem, setCurrentItem] = useState(null);  
-
+    
     useEffect(() => {
         if (error) {
             return;
@@ -121,6 +120,7 @@ const KanbanGrid = () => {
         });
         console.log(FINALLY);
         setBoards(FINALLY);
+        dispatch(updateBoards(FINALLY));
 
         // setBoards(boards.map(b => {
         //     if (b.title === board.title) {
@@ -182,6 +182,7 @@ const KanbanGrid = () => {
         });
         console.log(FINALLY);
         setBoards(FINALLY);
+        dispatch(updateBoards(FINALLY));
 
         // setBoards(boards.map(b => {
         //     if (b.id === board.id) {

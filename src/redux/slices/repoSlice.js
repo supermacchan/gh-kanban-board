@@ -14,6 +14,11 @@ const initialState = {
 export const repoSlice = createSlice({
     name: 'issues',
     initialState,
+    reducers: {
+        updateBoards(state, action) {
+            action.payload.map(b => state.issues[b.title] = b.issues);
+        },
+    },
     extraReducers: {
         [APIoperations.fetchAllIssues.fulfilled](state, action) {
             state.issues.open = action.payload.filter(issue => issue.state === "open");
@@ -38,4 +43,5 @@ export const repoSlice = createSlice({
     },
 });
 
+export const { updateBoards } = repoSlice.actions;
 export const issuesReducer = repoSlice.reducer;
