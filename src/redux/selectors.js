@@ -1,3 +1,4 @@
+export const selectAllIssues = state => state.issues.issues;
 export const selectOpenIssues = state => state.issues.issues.open;
 export const selectAssignedIssues = state => state.issues.issues.assigned;
 export const selectClosedIssues = state => state.issues.issues.closed;
