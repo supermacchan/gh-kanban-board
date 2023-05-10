@@ -41,12 +41,12 @@ const SearchForm = () => {
                 <Form.Field style={{display: 'flex', gap: '15px'}} >
                     <input 
                         type="text"
-                        placeholder='Enter repo URL' 
+                        placeholder="Enter repo URL" 
                         value={query}
                         onChange={(e) => setQuery(e.currentTarget.value.trim())}
                         required
                     />
-                    <Form.Button type='submit' color="black" style={{width: '150px'}} >Load issues</Form.Button>
+                    <Form.Button type="submit" color="black" style={{width: "150px"}} >Load issues</Form.Button>
                 </Form.Field>
             </Form>
         </Container>
