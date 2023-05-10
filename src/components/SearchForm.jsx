@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectError } from "redux/selectors";
 import { Container, Form } from 'semantic-ui-react';
-import { onFormSubmit } from "redux/slices/userSlice";
+import { onFormSubmit } from "redux/slices/activeSlice";
 import { APIoperations } from 'redux/operations';
 import { extractDataFromQuery } from "utils/extractDataFromQuery";
 

@@ -9,7 +9,7 @@ import {
     selectClosedIssues,
 } from 'redux/selectors';
 import { APIoperations } from 'redux/operations';
-import { updateBoards } from 'redux/slices/repoSlice';
+import { updateBoards } from 'redux/slices/activeSlice';
 import { Container, Grid, Header } from 'semantic-ui-react';
 import ToDo from './GridSections/ToDo';
 import InProgress from './GridSections/InProgress';

@@ -1,11 +1,11 @@
-export const selectAllIssues = state => state.issues.issues;
-export const selectOpenIssues = state => state.issues.issues.open;
-export const selectAssignedIssues = state => state.issues.issues.assigned;
-export const selectClosedIssues = state => state.issues.issues.closed;
+export const selectAllIssues = state => state.active.issues;
+export const selectOpenIssues = state => state.active.issues.open;
+export const selectAssignedIssues = state => state.active.issues.assigned;
+export const selectClosedIssues = state => state.active.issues.closed;
 
-export const selectLoading = state => state.issues.loading;
-export const selectError = state => state.issues.error;
+export const selectLoading = state => state.active.loading;
+export const selectError = state => state.active.error;
 
-export const selectCurrentOwner = state => state.user.current.owner;
-export const selectCurrentRepo = state => state.user.current.repo;
-export const selectCurrentStarCount = state => state.user.current.stars;
+export const selectCurrentOwner = state => state.active.current.owner;
+export const selectCurrentRepo = state => state.active.current.repo;
+export const selectCurrentStarCount = state => state.active.current.stars;

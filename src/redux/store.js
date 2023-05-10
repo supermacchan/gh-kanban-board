@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { issuesReducer } from "./slices/repoSlice";
-import { userReducer } from "./slices/userSlice";
+import { activeReducer } from "./slices/activeSlice";
+import { historyReducer } from "./slices/historySlice";
 import localStorage from 'redux-persist/lib/storage';
 import {
     persistStore,
@@ -17,13 +17,13 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 const persistConfig = {
     key: 'root/repo',
     storage: localStorage,
-    blacklist: ['issues'],
+    blacklist: ['history'],
     stateReconciler: autoMergeLevel2,
 };
 
 const rootReducer = combineReducers({
-    user: userReducer,
-    issues: issuesReducer
+    history: historyReducer,
+    active: activeReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -7,14 +7,24 @@ const initialState = {
         assigned: [],
         closed: []
     },
+    current: {
+        owner: null,
+        repo: null,
+        stars: null
+    },
     error: null,
     loading: false,
 };
 
-export const repoSlice = createSlice({
-    name: 'issues',
+export const activeSlice = createSlice({
+    name: 'active',
     initialState,
     reducers: {
+        onFormSubmit(state, action) {
+            console.log(action);
+            state.current.owner = action.payload.owner;
+            state.current.repo = action.payload.repo;
+        },
         updateBoards(state, action) {
             action.payload.map(b => state.issues[b.title] = b.issues);
         },
@@ -52,8 +62,24 @@ export const repoSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
+        [APIoperations.fetchAllIssues.rejected](state, action) {
+            state.current = {
+                owner: null,
+                repo: null,
+                stars: null
+            };
+            state.error = action.payload;
+        },
+
+        [APIoperations.fetchStars.fulfilled](state, action) {
+            state.current.stars = action.payload;
+            state.error = null;
+        },
+        [APIoperations.fetchStars.rejected](state, action) {
+            state.error = action.payload;
+        }
     },
 });
 
-export const { updateBoards } = repoSlice.actions;
-export const issuesReducer = repoSlice.reducer;
+export const { onFormSubmit, updateBoards } = activeSlice.actions;
+export const activeReducer = activeSlice.reducer;

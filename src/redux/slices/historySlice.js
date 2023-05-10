@@ -11,16 +11,9 @@ const initialState = {
     error: null,
 };
 
-export const userSlice = createSlice({
-    name: 'user',
+export const historySlice = createSlice({
+    name: 'history',
     initialState,
-    reducers: {
-        onFormSubmit(state, action) {
-            console.log(action);
-            state.current.owner = action.payload.owner;
-            state.current.repo = action.payload.repo;
-        }
-    },
     extraReducers: {
         [APIoperations.fetchAllIssues.fulfilled](state, action) {
             const filteredResult = action.payload.map(issue => {
@@ -46,24 +39,7 @@ export const userSlice = createSlice({
             })
             state.error = null;
         },
-        [APIoperations.fetchAllIssues.rejected](state, action) {
-            state.current = {
-                owner: null,
-                repo: null,
-                stars: null
-            };
-            state.error = action.payload;
-        },
-
-        [APIoperations.fetchStars.fulfilled](state, action) {
-            state.current.stars = action.payload;
-            state.error = null;
-        },
-        [APIoperations.fetchStars.rejected](state, action) {
-            state.error = action.payload;
-        }
     },
 });
 
-export const { onFormSubmit } = userSlice.actions;
-export const userReducer = userSlice.reducer;
+export const historyReducer = historySlice.reducer;
