@@ -21,9 +21,15 @@ export const activeSlice = createSlice({
     initialState,
     reducers: {
         onFormSubmit(state, action) {
-            console.log(action);
+            // console.log(action);
             state.current.owner = action.payload.owner;
             state.current.repo = action.payload.repo;
+        },
+        updateCurrentIssues(state, action) {
+            const savedRepo = action.payload;
+            state.issues.open = savedRepo.filter(issue => issue.state === "open");
+            state.issues.assigned = savedRepo.filter(issue => issue.assignee);
+            state.issues.closed = savedRepo.filter(issue => issue.state === "closed");
         },
         updateBoards(state, action) {
             action.payload.map(b => state.issues[b.title] = b.issues);
@@ -81,5 +87,5 @@ export const activeSlice = createSlice({
     },
 });
 
-export const { onFormSubmit, updateBoards } = activeSlice.actions;
+export const { onFormSubmit, updateCurrentIssues, updateBoards } = activeSlice.actions;
 export const activeReducer = activeSlice.reducer;

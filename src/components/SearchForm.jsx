@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectError } from "redux/selectors";
+import { selectError, selectQueries } from "redux/selectors";
 import { Container, Form } from 'semantic-ui-react';
-import { onFormSubmit } from "redux/slices/activeSlice";
+import { onFormSubmit, updateCurrentIssues } from "redux/slices/activeSlice";
 import { APIoperations } from 'redux/operations';
 import { extractDataFromQuery } from "utils/extractDataFromQuery";
 
 const SearchForm = () => {
     const [query, setQuery] = useState('');
     const error = useSelector(selectError);
+    const queries = useSelector(selectQueries);
     const dispatch = useDispatch();
 
     const handleFormSubmit = async (e) => {
@@ -17,22 +18,59 @@ const SearchForm = () => {
 
         // in case the query is incorrect
         if (!data) {
+            console.log('incorrect data');
             return;
         }
 
+        // сетим данные в бредкрамс
         dispatch(onFormSubmit(data));
-        await dispatch(APIoperations.fetchAllIssues(data));
 
-        if (error) {
-            return;
-        }  
-
+        // проверяем адекватность репозитория и если все ок, забираем звездочки
         dispatch(APIoperations.fetchStars(data));
-        reset(); 
+
+        // если репо не найден, закругляемся
+        if (error) {
+            console.log('incorrect repo name');
+            return;
+        } 
+
+        // проверяем, включен ли запрос в историю
+        const queriesCheck = checkQueries(data);
+
+        // если запрос уже включен в историю
+        if (queriesCheck) {
+            updateCurrentIssues(queriesCheck);
+            
+            // dispatch(APIoperations.fetchStars(data));
+            inputQueryReset(); 
+            return;
+        }
+
+        await dispatch(APIoperations.fetchAllIssues(data));
+        inputQueryReset(); 
+        // dispatch(APIoperations.fetchStars(data));
+        
     }
 
-    const reset = () => {
+    const inputQueryReset = () => {
         setQuery('');
+    }
+
+    const checkQueries = (data) => {
+        if (queries) {
+            const isIncluded = queries.find(repo => 
+                repo.owner === data.owner 
+                && repo.repo === data.repo
+            );
+    
+            if (!isIncluded) {
+                console.log('not included');
+                return null;
+            }
+    
+            console.log('included');
+            return isIncluded;
+        }
     }
 
     return (

@@ -9,3 +9,5 @@ export const selectError = state => state.active.error;
 export const selectCurrentOwner = state => state.active.current.owner;
 export const selectCurrentRepo = state => state.active.current.repo;
 export const selectCurrentStarCount = state => state.active.current.stars;
+
+export const selectQueries = state => state.history.queries;

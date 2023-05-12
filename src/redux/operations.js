@@ -20,15 +20,7 @@ const fetchAllIssues = createAsyncThunk(
             }
           })
 
-        console.log(data);
-        // const result = {
-        //   id: data.id,
-        //   title: data.title,
-        //   number: data.number,
-        //   created_at: data.created_at,
-        //   user: data.user,
-        //   comments: data.comments,
-        // }
+        // console.log(data);
         return data;
       } catch (err) {
         toast.error(err.message);
@@ -49,7 +41,7 @@ const fetchStars = createAsyncThunk(
         }
       })
 
-      console.log(data.stargazers_count);
+      // console.log(data.stargazers_count);
       return data.stargazers_count;
     } catch (err) {
       toast.error(err.message);

@@ -22,9 +22,7 @@ const KanbanGrid = () => {
     const repo = useSelector(selectCurrentRepo);
     const error = useSelector(selectError);
 
-    const [currentBoard, setCurrentBoard] = useState(null);
-    const [currentItem, setCurrentItem] = useState(null);  
-    const [boards, setBoards] = useState([
+    const initialBoards = [
         {
             title: "open",
             issues: useSelector(selectOpenIssues)
@@ -37,7 +35,11 @@ const KanbanGrid = () => {
             title: "closed",
             issues: useSelector(selectClosedIssues)
         }
-    ]); 
+    ];
+
+    const [currentBoard, setCurrentBoard] = useState(null);
+    const [currentItem, setCurrentItem] = useState(null);  
+    const [boards, setBoards] = useState(initialBoards); 
     
     useEffect(() => {
         if (error) {
@@ -46,9 +48,16 @@ const KanbanGrid = () => {
 
         if (owner && repo) {
             dispatch(APIoperations.fetchAllIssues({owner, repo}));
+            // обновлять борды после каждого нового запроса - с обновлением оунера и репо
+            resetBoards();
         }
+
+        // return (() => resetBoards());
     }, [dispatch, owner, repo, error])
 
+    const resetBoards = () => {
+        setBoards(initialBoards);
+    };
 
     const dragStartHandler = (e, item, board) => {
         // запоминает карту, которую мы взяли и двигаем и доску, на которой она лежит
@@ -81,13 +90,14 @@ const KanbanGrid = () => {
         const clearedBoard = [...currentBoard.issues];
         clearedBoard.splice(currentIndex, 1);
         // console.log(clearedBoard);
-        // setCurrentBoard(updatedBoard);
+        
 
         // обновленная версия доски, с которой мы подняли карту
         const CURRENT_BOARD = {
-            title: board.title,
+            title: currentBoard.title,
             issues: [...clearedBoard]
         }
+        setCurrentBoard(CURRENT_BOARD);
 
         // получает доску из пропсов целевой карточки, на которую мы скидываем новую карту
         const dropIndex = board.issues.indexOf(item);
@@ -107,20 +117,28 @@ const KanbanGrid = () => {
         const FINALLY = boards.map(b => {
             // если тайтл доски совпадает с тайтлом той доски, на которую мы закинули новую карту
             if (b.title === board.title) {
+                // const brd = {
+                //     title: board.title,
+                //     issues: [...updatedBoard]
+                // }
                 return BOARD;
             }
 
             // если тайтл доски совпадает с тайтлом доски, с которой сняли карту
             if (b.title === currentBoard.title) {
+                // const brd = {
+                //     title: board.title,
+                //     issues: [...updatedBoard]
+                // }
                 return CURRENT_BOARD;
             }
 
             // в остальных случаях возвращаем доску, как есть
             return b;
         });
-        console.log(FINALLY);
+        // console.log(FINALLY);
         setBoards(FINALLY);
-        dispatch(updateBoards(FINALLY));
+        // dispatch(updateBoards(FINALLY));
 
         // setBoards(boards.map(b => {
         //     if (b.title === board.title) {
@@ -153,20 +171,23 @@ const KanbanGrid = () => {
 
         // берет доску, где находилась карта и изымает ее из этой доски
         const currentIndex = currentBoard.issues.indexOf(currentItem);
-        // console.log(`current card index ${currentIndex}`);
+        console.log(currentBoard);
         const clearedBoard = [...currentBoard.issues];
         clearedBoard.splice(currentIndex, 1);
-        // console.log(clearedBoard);
-        // setCurrentBoard(updatedBoard);
+        console.log(clearedBoard.length);
+        // setCurrentBoard(clearedBoard);
 
         // обновленная версия доски, с которой мы подняли карту
         const CURRENT_BOARD = {
-            title: board.title,
+            title: currentBoard.title,
             issues: [...clearedBoard]
         }
+        setCurrentBoard(CURRENT_BOARD);
 
         // сетим массив всех досок и обновляем данные
         const FINALLY = boards.map(b => {
+            console.log(b.title);
+            // console.log(currentBoard.title);
             // если тайтл доски совпадает с тайтлом той доски, на которую мы закинули новую карту
             if (b.title === board.title) {
                 return BOARD;
@@ -174,15 +195,16 @@ const KanbanGrid = () => {
 
             // если тайтл доски совпадает с тайтлом доски, с которой сняли карту
             if (b.title === currentBoard.title) {
+                console.log(CURRENT_BOARD.issues.length);
                 return CURRENT_BOARD;
             }
 
             // в остальных случаях возвращаем доску, как есть
             return b;
         });
-        console.log(FINALLY);
+        // console.log(FINALLY);
         setBoards(FINALLY);
-        dispatch(updateBoards(FINALLY));
+        // dispatch(updateBoards(FINALLY));
 
         // setBoards(boards.map(b => {
         //     if (b.id === board.id) {
@@ -196,6 +218,12 @@ const KanbanGrid = () => {
         //     return b;
         // }))
     }
+
+    useEffect(() => {
+        console.log("boards обновились");
+        console.log(boards);
+        dispatch(updateBoards(boards));
+    }, [dispatch, boards])
 
     return (
         <Container style={{padding: '15px 0'}}> 
