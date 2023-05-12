@@ -11,6 +11,7 @@ import {
 } from 'redux/selectors';
 import { APIoperations } from 'redux/operations';
 import { updateBoards, updateCurrentIssues } from 'redux/slices/activeSlice';
+import { updateHistory } from 'redux/slices/historySlice';
 import { Container, Grid, Header } from 'semantic-ui-react';
 import { checkQueries } from "utils/checkQueries";
 import ToDo from './GridSections/ToDo';
@@ -24,21 +25,51 @@ const KanbanGrid = () => {
     const repo = useSelector(selectCurrentRepo);
     const error = useSelector(selectError);
     const queries = useSelector(selectQueries);
+    const open = useSelector(selectOpenIssues);
+    const assigned = useSelector(selectAssignedIssues);
+    const closed = useSelector(selectClosedIssues);
+
+    // const initialBoards = useMemo(() => [
+    //     // {
+    //     //     title: "open",
+    //     //     issues: useSelector(selectOpenIssues)
+    //     // },
+    //     // {
+    //     //     title: "assigned",
+    //     //     issues: useSelector(selectAssignedIssues)
+    //     // },
+    //     // {
+    //     //     title: "closed",
+    //     //     issues: useSelector(selectClosedIssues)
+    //     // },
+    //     {
+    //         title: "open",
+    //         issues: open
+    //     },
+    //     {
+    //         title: "assigned",
+    //         issues: assigned
+    //     },
+    //     {
+    //         title: "closed",
+    //         issues: closed
+    //     }
+    // ], [open, assigned, closed]);
 
     const initialBoards = [
         {
             title: "open",
-            issues: useSelector(selectOpenIssues)
+            issues: open
         },
         {
             title: "assigned",
-            issues: useSelector(selectAssignedIssues)
+            issues: assigned
         },
         {
             title: "closed",
-            issues: useSelector(selectClosedIssues)
+            issues: closed
         }
-    ];
+    ]
 
     const [currentBoard, setCurrentBoard] = useState(null);
     const [currentItem, setCurrentItem] = useState(null);  
@@ -68,11 +99,14 @@ const KanbanGrid = () => {
         }
 
         // return (() => resetBoards());
+
+        // !!!!!!!!! TEMPORARY !!!!!!!!!!
+        // eslint-disable-next-line
     }, [dispatch, owner, repo, error, queries])
 
     const resetBoards = () => {
         setBoards(initialBoards);
-    };
+    }
 
     const dragStartHandler = (e, item, board) => {
         // запоминает карту, которую мы взяли и двигаем и доску, на которой она лежит
@@ -238,7 +272,10 @@ const KanbanGrid = () => {
         console.log("boards обновились");
         console.log(boards);
         dispatch(updateBoards(boards));
-    }, [dispatch, boards])
+        
+        console.log("обновляю историю");
+        dispatch(updateHistory({owner, repo, boards}));
+    }, [dispatch, boards, owner, repo])
 
     return (
         <Container style={{padding: '15px 0'}}> 
