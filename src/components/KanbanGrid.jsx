@@ -7,10 +7,12 @@ import {
     selectOpenIssues,
     selectAssignedIssues,
     selectClosedIssues,
+    selectQueries
 } from 'redux/selectors';
 import { APIoperations } from 'redux/operations';
-import { updateBoards } from 'redux/slices/activeSlice';
+import { updateBoards, updateCurrentIssues } from 'redux/slices/activeSlice';
 import { Container, Grid, Header } from 'semantic-ui-react';
+import { checkQueries } from "utils/checkQueries";
 import ToDo from './GridSections/ToDo';
 import InProgress from './GridSections/InProgress';
 import Done from './GridSections/Done';
@@ -21,6 +23,7 @@ const KanbanGrid = () => {
     const owner = useSelector(selectCurrentOwner);
     const repo = useSelector(selectCurrentRepo);
     const error = useSelector(selectError);
+    const queries = useSelector(selectQueries);
 
     const initialBoards = [
         {
@@ -47,13 +50,25 @@ const KanbanGrid = () => {
         }
 
         if (owner && repo) {
-            dispatch(APIoperations.fetchAllIssues({owner, repo}));
+            const data = {owner, repo};
+            const queriesCheck = checkQueries(data, queries);
+
+            // если запрос уже включен в историю
+            if (queriesCheck) {
+                console.log('updating');
+                dispatch(updateCurrentIssues(queriesCheck));
+                
+                resetBoards();
+                return;
+            }
+
+            dispatch(APIoperations.fetchAllIssues(data));
             // обновлять борды после каждого нового запроса - с обновлением оунера и репо
             resetBoards();
         }
 
         // return (() => resetBoards());
-    }, [dispatch, owner, repo, error])
+    }, [dispatch, owner, repo, error, queries])
 
     const resetBoards = () => {
         setBoards(initialBoards);

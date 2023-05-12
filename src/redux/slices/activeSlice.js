@@ -26,10 +26,11 @@ export const activeSlice = createSlice({
             state.current.repo = action.payload.repo;
         },
         updateCurrentIssues(state, action) {
-            const savedRepo = action.payload;
-            state.issues.open = savedRepo.filter(issue => issue.state === "open");
-            state.issues.assigned = savedRepo.filter(issue => issue.assignee);
-            state.issues.closed = savedRepo.filter(issue => issue.state === "closed");
+            console.log('updated');
+            const savedRepo = action.payload.issues;
+            state.issues.open = savedRepo.open;
+            state.issues.assigned = savedRepo.assigned;
+            state.issues.closed = savedRepo.closed;
         },
         updateBoards(state, action) {
             action.payload.map(b => state.issues[b.title] = b.issues);

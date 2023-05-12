@@ -5,6 +5,7 @@ import { Container, Form } from 'semantic-ui-react';
 import { onFormSubmit, updateCurrentIssues } from "redux/slices/activeSlice";
 import { APIoperations } from 'redux/operations';
 import { extractDataFromQuery } from "utils/extractDataFromQuery";
+import { checkQueries } from "utils/checkQueries";
 
 const SearchForm = () => {
     const [query, setQuery] = useState('');
@@ -35,11 +36,12 @@ const SearchForm = () => {
         } 
 
         // проверяем, включен ли запрос в историю
-        const queriesCheck = checkQueries(data);
+        const queriesCheck = checkQueries(data, queries);
 
         // если запрос уже включен в историю
         if (queriesCheck) {
-            updateCurrentIssues(queriesCheck);
+            console.log('updating');
+            dispatch(updateCurrentIssues(queriesCheck));
             
             // dispatch(APIoperations.fetchStars(data));
             inputQueryReset(); 
@@ -56,22 +58,22 @@ const SearchForm = () => {
         setQuery('');
     }
 
-    const checkQueries = (data) => {
-        if (queries) {
-            const isIncluded = queries.find(repo => 
-                repo.owner === data.owner 
-                && repo.repo === data.repo
-            );
+    // const checkQueries = (data) => {
+    //     if (queries) {
+    //         const isIncluded = queries.find(repo => 
+    //             repo.owner === data.owner 
+    //             && repo.repo === data.repo
+    //         );
     
-            if (!isIncluded) {
-                console.log('not included');
-                return null;
-            }
+    //         if (!isIncluded) {
+    //             console.log('not included');
+    //             return null;
+    //         }
     
-            console.log('included');
-            return isIncluded;
-        }
-    }
+    //         console.log('included');
+    //         return isIncluded;
+    //     }
+    // }
 
     return (
         <Container style={{padding: '15px 0'}}>
