@@ -36,6 +36,10 @@ const SearchForm = () => {
         } 
 
         // проверяем, включен ли запрос в историю
+        // if (queries.length === 0) {
+        //     console.log('no q')
+        //     return;
+        // }
         const queriesCheck = checkQueries(data, queries);
 
         // если запрос уже включен в историю

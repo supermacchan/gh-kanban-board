@@ -25,9 +25,9 @@ const KanbanGrid = () => {
     const repo = useSelector(selectCurrentRepo);
     const error = useSelector(selectError);
     const queries = useSelector(selectQueries);
-    const open = useSelector(selectOpenIssues);
-    const assigned = useSelector(selectAssignedIssues);
-    const closed = useSelector(selectClosedIssues);
+    // const open = useSelector(selectOpenIssues);
+    // const assigned = useSelector(selectAssignedIssues);
+    // const closed = useSelector(selectClosedIssues);
 
     // const initialBoards = useMemo(() => [
     //     // {
@@ -59,21 +59,77 @@ const KanbanGrid = () => {
     const initialBoards = [
         {
             title: "open",
-            issues: open
+            issues: useSelector(selectOpenIssues)
         },
         {
             title: "assigned",
-            issues: assigned
+            issues: useSelector(selectAssignedIssues)
         },
         {
             title: "closed",
-            issues: closed
+            issues: useSelector(selectClosedIssues)
         }
     ]
+
+    // eslint-disable-next-line
+    // const [initialBoards, setInitialBoards] = useState([
+    //     {
+    //       title: "open",
+    //       issues: open,
+    //     },
+    //     {
+    //       title: "assigned",
+    //       issues: assigned,
+    //     },
+    //     {
+    //       title: "closed",
+    //       issues: closed,
+    //     },
+    //   ]);
+
+    // const initialBoards = useMemo(
+    //     () => [
+    //              {
+    //                 title: "open",
+    //                  issues: open,      
+    //             },      
+    //             {        
+    //                 title: "assigned",        
+    //                 issues: assigned,      
+    //             },      
+    //             {        
+    //                 title: "closed",        
+    //                 issues: closed,      
+    //             },    
+    //         ],
+    //     [open, assigned, closed]
+    //   );
+
+    // useEffect(() => {
+    //     setInitialBoards([
+    //       {
+    //         title: "open",
+    //         issues: open,
+    //       },
+    //       {
+    //         title: "assigned",
+    //         issues: assigned,
+    //       },
+    //       {
+    //         title: "closed",
+    //         issues: closed,
+    //       },
+    //     ]);
+    //   }, [open, assigned, closed]);
 
     const [currentBoard, setCurrentBoard] = useState(null);
     const [currentItem, setCurrentItem] = useState(null);  
     const [boards, setBoards] = useState(initialBoards); 
+
+    // const resetBoards = useCallback(() => {
+    //     setBoards(initialBoards);
+    //   }, [initialBoards]);
+
     
     useEffect(() => {
         if (error) {
@@ -82,11 +138,19 @@ const KanbanGrid = () => {
 
         if (owner && repo) {
             const data = {owner, repo};
-            const queriesCheck = checkQueries(data, queries);
+            console.log('kanban mounts');
+            console.log(queries);
 
+            if (queries.length === 0) {
+                console.log('no q')
+                return;
+            }
+
+            console.log('here comes the q');
+            const queriesCheck = checkQueries(data, queries);
             // если запрос уже включен в историю
             if (queriesCheck) {
-                console.log('updating');
+                console.log('updating current issues from the history');
                 dispatch(updateCurrentIssues(queriesCheck));
                 
                 resetBoards();
@@ -98,9 +162,6 @@ const KanbanGrid = () => {
             resetBoards();
         }
 
-        // return (() => resetBoards());
-
-        // !!!!!!!!! TEMPORARY !!!!!!!!!!
         // eslint-disable-next-line
     }, [dispatch, owner, repo, error, queries])
 
@@ -109,11 +170,8 @@ const KanbanGrid = () => {
     }
 
     const dragStartHandler = (e, item, board) => {
-        // запоминает карту, которую мы взяли и двигаем и доску, на которой она лежит
         setCurrentBoard(board);
         setCurrentItem(item);
-
-        // console.log(boards);
     }
     
     const dragEndHandler = e => {
@@ -133,14 +191,10 @@ const KanbanGrid = () => {
 
         e.target.style.transform = 'scale(1)';
 
-        // берет доску, где находилась карта и изымает ее из этой доски
         const currentIndex = currentBoard.issues.indexOf(currentItem);
-        // console.log(`current card index ${currentIndex}`);
         const clearedBoard = [...currentBoard.issues];
         clearedBoard.splice(currentIndex, 1);
-        // console.log(clearedBoard);
         
-
         // обновленная версия доски, с которой мы подняли карту
         const CURRENT_BOARD = {
             title: currentBoard.title,
@@ -148,13 +202,9 @@ const KanbanGrid = () => {
         }
         setCurrentBoard(CURRENT_BOARD);
 
-        // получает доску из пропсов целевой карточки, на которую мы скидываем новую карту
         const dropIndex = board.issues.indexOf(item);
-        // console.log(`drop card index ${dropIndex}`);
         const updatedBoard = [...board.issues];
-        
         updatedBoard.splice(dropIndex, 0, currentItem);
-        // console.log(updatedBoard);
 
         // обновленная версия той доски, на которую мы положили новую карту
         const BOARD = {
@@ -162,53 +212,31 @@ const KanbanGrid = () => {
             issues: [...updatedBoard]
         }
 
-        // сетим массив всех досок и обновляем данные
         const FINALLY = boards.map(b => {
-            // если тайтл доски совпадает с тайтлом той доски, на которую мы закинули новую карту
             if (b.title === board.title) {
-                // const brd = {
-                //     title: board.title,
-                //     issues: [...updatedBoard]
-                // }
                 return BOARD;
             }
 
-            // если тайтл доски совпадает с тайтлом доски, с которой сняли карту
             if (b.title === currentBoard.title) {
-                // const brd = {
-                //     title: board.title,
-                //     issues: [...updatedBoard]
-                // }
                 return CURRENT_BOARD;
             }
 
-            // в остальных случаях возвращаем доску, как есть
             return b;
         });
-        // console.log(FINALLY);
+
         setBoards(FINALLY);
+
         // dispatch(updateBoards(FINALLY));
 
-        // setBoards(boards.map(b => {
-        //     if (b.title === board.title) {
-        //         return board;
-        //     }
-
-        //     if (b.title === currentBoard.title) {
-        //         return currentBoard;
-        //     }
-
-        //     return b;
-        // }));
+        // console.log("карта дропнулась - обновляю историю");
+        // dispatch(updateHistory({owner, repo, FINALLY}));
     }
 
-    // для дропа на доску, а не на другую карту
     const dropCardHandler = (e, board) => {
         if (e.target.className === "ui blue card") {
             return;
         }
 
-        // добавляем карточку в низ доски
         const updatedBoard = [...board.issues];
         updatedBoard.push(currentItem);
 
@@ -218,13 +246,9 @@ const KanbanGrid = () => {
             issues: [...updatedBoard]
         }
 
-        // берет доску, где находилась карта и изымает ее из этой доски
         const currentIndex = currentBoard.issues.indexOf(currentItem);
-        console.log(currentBoard);
         const clearedBoard = [...currentBoard.issues];
         clearedBoard.splice(currentIndex, 1);
-        console.log(clearedBoard.length);
-        // setCurrentBoard(clearedBoard);
 
         // обновленная версия доски, с которой мы подняли карту
         const CURRENT_BOARD = {
@@ -233,46 +257,32 @@ const KanbanGrid = () => {
         }
         setCurrentBoard(CURRENT_BOARD);
 
-        // сетим массив всех досок и обновляем данные
         const FINALLY = boards.map(b => {
             console.log(b.title);
-            // console.log(currentBoard.title);
-            // если тайтл доски совпадает с тайтлом той доски, на которую мы закинули новую карту
+
             if (b.title === board.title) {
                 return BOARD;
             }
 
-            // если тайтл доски совпадает с тайтлом доски, с которой сняли карту
             if (b.title === currentBoard.title) {
-                console.log(CURRENT_BOARD.issues.length);
                 return CURRENT_BOARD;
             }
 
-            // в остальных случаях возвращаем доску, как есть
             return b;
         });
-        // console.log(FINALLY);
         setBoards(FINALLY);
+
         // dispatch(updateBoards(FINALLY));
 
-        // setBoards(boards.map(b => {
-        //     if (b.id === board.id) {
-        //         return board;
-        //     }
-
-        //     if (b.id === currentBoard.id) {
-        //         return currentBoard;
-        //     }
-
-        //     return b;
-        // }))
+        // console.log("карта дропнулась - обновляю историю");
+        // dispatch(updateHistory({owner, repo, FINALLY}));
     }
 
     useEffect(() => {
         console.log("boards обновились");
         console.log(boards);
         dispatch(updateBoards(boards));
-        
+
         console.log("обновляю историю");
         dispatch(updateHistory({owner, repo, boards}));
     }, [dispatch, boards, owner, repo])

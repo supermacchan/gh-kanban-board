@@ -21,12 +21,11 @@ export const activeSlice = createSlice({
     initialState,
     reducers: {
         onFormSubmit(state, action) {
-            // console.log(action);
             state.current.owner = action.payload.owner;
             state.current.repo = action.payload.repo;
         },
         updateCurrentIssues(state, action) {
-            console.log('updated');
+            console.log('current issues updated in state');
             const savedRepo = action.payload.issues;
             state.issues.open = savedRepo.open;
             state.issues.assigned = savedRepo.assigned;
