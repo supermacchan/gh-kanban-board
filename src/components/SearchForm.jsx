@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectError, selectQueries } from "redux/selectors";
 import { Container, Form } from 'semantic-ui-react';
 import { onFormSubmit, updateCurrentIssues } from "redux/slices/activeSlice";
 import { APIoperations } from 'redux/operations';
+// import { store } from "redux/store";
 import { extractDataFromQuery } from "utils/extractDataFromQuery";
 import { checkQueries } from "utils/checkQueries";
 
 const SearchForm = () => {
     const [query, setQuery] = useState('');
+    const [history, setHistory] = useState([]);
     const error = useSelector(selectError);
     const queries = useSelector(selectQueries);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        setHistory(queries);
+    }, [queries]);
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -40,7 +46,12 @@ const SearchForm = () => {
         //     console.log('no q')
         //     return;
         // }
-        const queriesCheck = checkQueries(data, queries);
+        // const q = await store.getState().history.queries;
+        console.log('here comes the q!!!!!!!');
+        // console.log(q);
+        // const queriesCheck = checkQueries(data, queries);
+        console.log(history);
+        const queriesCheck = checkQueries(data, history);
 
         // если запрос уже включен в историю
         if (queriesCheck) {

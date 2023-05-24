@@ -25,9 +25,9 @@ const KanbanGrid = () => {
     const repo = useSelector(selectCurrentRepo);
     const error = useSelector(selectError);
     const queries = useSelector(selectQueries);
-    // const open = useSelector(selectOpenIssues);
-    // const assigned = useSelector(selectAssignedIssues);
-    // const closed = useSelector(selectClosedIssues);
+    const open = useSelector(selectOpenIssues);
+    const assigned = useSelector(selectAssignedIssues);
+    const closed = useSelector(selectClosedIssues);
 
     // const initialBoards = useMemo(() => [
     //     // {
@@ -129,6 +129,10 @@ const KanbanGrid = () => {
     // const resetBoards = useCallback(() => {
     //     setBoards(initialBoards);
     //   }, [initialBoards]);
+
+    useEffect(() => {
+        setBoards(initialBoards);
+    }, [owner, repo]);
 
     
     useEffect(() => {

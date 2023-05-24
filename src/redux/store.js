@@ -17,7 +17,7 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 const persistConfig = {
     key: 'root/repo',
     storage: localStorage,
-    blacklist: ['history'],
+    // blacklist: ['history'],
     stateReconciler: autoMergeLevel2,
 };
 
